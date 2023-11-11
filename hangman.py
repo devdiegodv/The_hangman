@@ -26,3 +26,31 @@ def request_letter():
             print("You have not chosen a correct letter")
     
     return choose_word
+
+def show_new_board(word_chosen):
+    hidden_list = []
+
+    for l in word_chosen:
+        if l in correct_letters:
+            hidden_list.append(l)
+        else:
+            hidden_list.append('-')
+
+    print(' '.join(hidden_list))
+
+def check_letter(chosen_letter, hidden_word, lifes, coincidences):
+    end = False
+    
+    if chosen_letter in hidden_word:
+        correct_letters.append(chosen_letter)
+        coincidences += 1
+    else:
+        incorrect_letters.append(chosen_letter)
+        lifes -= 1
+
+    if lifes == 0:
+        end = lost()
+    elif coincidences == letters_quantity:
+        end = win(hidden_word)
+
+    return lifes, end, coincidences
