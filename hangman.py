@@ -5,7 +5,7 @@ correct_letters = []
 incorrect_letters = []
 tries = 6
 successes = 0
-game_finished = False
+finished_game = False
 
 def choose_word(words_list):
     chosen_word = choice(words_list)
@@ -24,8 +24,8 @@ def request_letter():
             is_valid = True
         else:
             print("You have not chosen a correct letter")
-    
-    return choose_word
+
+    return chosen_letter 
 
 def show_new_board(word_chosen):
     hidden_list = []
@@ -38,9 +38,9 @@ def show_new_board(word_chosen):
 
     print(' '.join(hidden_list))
 
-def check_letter(chosen_letter, hidden_word, lifes, coincidences):
+def check_letter(chosen_letter, hidden_word, lifes, coincidences, uniques_letters):
     end = False
-    
+
     if chosen_letter in hidden_word:
         correct_letters.append(chosen_letter)
         coincidences += 1
@@ -50,7 +50,32 @@ def check_letter(chosen_letter, hidden_word, lifes, coincidences):
 
     if lifes == 0:
         end = lost()
-    elif coincidences == letters_quantity:
+    elif coincidences == uniques_letters:
         end = win(hidden_word)
 
     return lifes, end, coincidences
+
+def lost():
+    print("You have run out of lives")
+    print("The hidden word was " + word)
+
+    return True
+
+def win(discovered_word):
+    show_new_board(discovered_word)
+    print("Congratulations, you have found the word !!!")
+
+    return True
+
+word, uniques_letters = choose_word(words)
+
+while not finished_game:
+    print('\n' + '*' * 20 + '\n')
+    show_new_board(word)
+    print('\n')
+    print('Incorrects words: ' + '-'.join(incorrect_letters))
+    print(f"Lifes: {tries}")
+    print('\n' + '*' * 20 + '\n')
+    letter = request_letter()
+
+    tries, finished_game, successes = check_letter(letter, word, tries, successes, uniques_letters) 
